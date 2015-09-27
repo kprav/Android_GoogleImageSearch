@@ -59,7 +59,7 @@ public class ImageResult implements Parcelable {
     // Constructor
     public ImageResult(JSONObject json) {
         try {
-            this.fullUrl = json.getString("url");
+            this.fullUrl = json.getString("unescapedUrl");
             this.thumbUrl = json.getString("tbUrl");
             this.title = json.getString("title");
             this.width = json.getInt("width");
@@ -83,7 +83,6 @@ public class ImageResult implements Parcelable {
         }
         return results;
     }
-
 
     @Override
     public int describeContents() {
