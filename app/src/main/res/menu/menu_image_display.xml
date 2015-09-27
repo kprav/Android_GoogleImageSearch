@@ -2,6 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.codepath.googleimagesearch.activities.ImageDisplayActivity">
+
     <item
         android:id="@+id/action_progress_display"
         android:orderInCategory="1"
@@ -9,4 +10,13 @@
         android:visible="false"
         app:actionLayout="@layout/action_progress_bar"
         app:showAsAction="ifRoom" />
+
+    <item android:id="@+id/action_share"
+        android:orderInCategory="2"
+        android:title="@string/action_share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:visible="false"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider" />
+
 </menu>

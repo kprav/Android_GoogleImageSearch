@@ -11,7 +11,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -123,7 +122,6 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
             url = url + "&imgtype=" + imageType;
         if (!siteFilter.equalsIgnoreCase("Any"))
             url = url + "&as_sitesearch=" + siteFilter;
-        Log.i("URL", url);
         return url;
     }
 
@@ -265,14 +263,13 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         return super.onOptionsItemSelected(item);
     }
 
-    public void showProgressBar() {
-        // Show progress item
-        progressBar.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    private void showProgressBar() {
+        // Show progress bar
         progressBar.setVisible(true);
     }
 
-    public void hideProgressBar() {
-        // Hide progress item
+    private void hideProgressBar() {
+        // Hide progress bar
         progressBar.setVisible(false);
     }
 

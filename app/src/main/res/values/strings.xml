@@ -4,13 +4,15 @@
 
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
-    <string name="action_progress">Loading...</string>
+    <string name="action_progress">Loading…</string>
+    <string name="action_share">Share</string>
+
     <string name="title_activity_search">Google Image Search</string>
     <string name="search_prompt">Enter search query</string>
     <string name="search_label">Search</string>
     <string name="image_title_label">Image Title</string>
 
-    <string name="title_activity_image_display">Full Image</string>
+    <string name="title_activity_image_display">Google Image Search</string>
     <string name="image_result_label">Image Result</string>
 
     <string name="image_size_label">Image Size</string>
