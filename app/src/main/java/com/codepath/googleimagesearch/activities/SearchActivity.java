@@ -7,15 +7,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 
 import com.codepath.googleimagesearch.R;
 import com.codepath.googleimagesearch.adapters.ImageResultsAdapter;
@@ -35,12 +37,13 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity implements SettingsFragment.OnFragmentInteractionListener {
 
-    private EditText etQuery;
+    //private EditText etQuery;
     private GridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter adapterImageResults;
-    private int offset = 0;
+    private MenuItem progressBar;
 
+    private int offset = 0;
     private static String searchQuery = "Any";
     private static String imageSize = "Any";
     private static String colorFilter = "Any";
@@ -64,13 +67,11 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         adapterImageResults = new ImageResultsAdapter(this, imageResults);
         // Link the adapter to the gridview
         gvResults.setAdapter(adapterImageResults);
-        // Perform an initial search to fill up the grid
-        performImageSearch(true);
     }
 
     // Setup all views and listeners in current activity
     private void setupViews() {
-        etQuery = (EditText) findViewById(R.id.etQuery);
+        // etQuery = (EditText) findViewById(R.id.etQuery);
         gvResults = (GridView) findViewById(R.id.gvResults);
         // Define a listener for items in the grid (when clicked)
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -128,7 +129,9 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
 
     private void performImageSearch(boolean reset) {
         // Perform search only if the network is available
+        showProgressBar();
         if (!isNetworkAvailable()) {
+            hideProgressBar();
             return;
         }
         String searchUrl = constructUrl();
@@ -154,13 +157,19 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                             // Instead of the above two lines, the adapter can be directly changed.
                             // Making changes to the adapter will also modify the underlying data.
                             adapterImageResults.addAll(ImageResult.fromJSONArray(imageResultsJson));
+                            hideProgressBar();
                         }
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-            // TODO: onFailure
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                hideProgressBar();
+            }
         });
     }
 
@@ -186,21 +195,57 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
 
     // Called when the search button is pressed
     // This is done by setting the android:onClick property in the XML
+    // This is deprecated, as search is performed from action bar.
+    /*
+    @Deprecated
     public void onImageSearch(View view) {
         offset = 0;
         searchQuery = null;
         searchQuery = etQuery.getText().toString().trim();
-        if (searchQuery.equalsIgnoreCase(""))
+        if (searchQuery.equals(""))
             searchQuery = "Any";
         // Construct URL and fire the network request
         performImageSearch(true);
     }
+    */
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_search, menu);
+        // Store instance of the menu item containing progress
+        progressBar = menu.findItem(R.id.action_progress_search);
+        // Perform an initial search to fill up the grid
+        performImageSearch(true);
         return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        // Store instance of the menu item containing progress
+        progressBar = menu.findItem(R.id.action_progress_search);
+        // Extract the action-view from the menu item
+        ProgressBar v = (ProgressBar) MenuItemCompat.getActionView(progressBar);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query != null)
+                    query = query.trim();
+                if (query == null || query.trim().equals(""))
+                    query = "Any";
+                searchQuery = query;
+                performImageSearch(true);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -210,7 +255,6 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FragmentManager fm = getSupportFragmentManager();
             SettingsFragment settingsFragment = SettingsFragment.newInstance(imageSize, colorFilter, imageType, siteFilter);
@@ -219,6 +263,17 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        progressBar.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        progressBar.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        progressBar.setVisible(false);
     }
 
     @Override
