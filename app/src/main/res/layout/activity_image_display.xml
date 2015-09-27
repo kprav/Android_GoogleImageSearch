@@ -5,10 +5,10 @@
     android:background="#ffffff"
     tools:context="com.codepath.googleimagesearch.activities.ImageDisplayActivity">
 
-    <ImageView
+    <com.codepath.googleimagesearch.touchimageview.TouchImageView
         android:id="@+id/ivImageFullScreen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:maxWidth="600dp"
         android:scaleType="center"
         android:adjustViewBounds="true"

@@ -29,6 +29,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.codepath.googleimagesearch.activities.SearchActivity" />
         </activity>
+        <activity android:name="com.codepath.googleimagesearch.touchimageview.SingleTouchImageViewActivity" />
+        <activity android:name="com.codepath.googleimagesearch.touchimageview.MirroringExampleActivity" />
+        <activity android:name="com.codepath.googleimagesearch.touchimageview.ViewPagerExampleActivity" />
+        <activity android:name="com.codepath.googleimagesearch.touchimageview.SwitchImageExampleActivity" />
+        <activity android:name="com.codepath.googleimagesearch.touchimageview.SwitchScaleTypeExampleActivity" />
     </application>
 
 </manifest>

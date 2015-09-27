@@ -18,7 +18,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.codepath.googleimagesearch.R;
+import com.codepath.googleimagesearch.helpers.DeviceDimensionsHelper;
 import com.codepath.googleimagesearch.models.ImageResult;
+import com.codepath.googleimagesearch.touchimageview.TouchImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -28,7 +30,7 @@ import java.io.IOException;
 
 public class ImageDisplayActivity extends AppCompatActivity {
 
-    private ImageView ivImage;
+    private TouchImageView ivImage;
     private MenuItem progressBar;
     private MenuItem shareMenuItem;
     private Intent shareIntent;
@@ -49,14 +51,16 @@ public class ImageDisplayActivity extends AppCompatActivity {
         // Extract the URL from the Parcelable
         url = result.getFullUrl();
         // Find the image view
-        ivImage = (ImageView) findViewById(R.id.ivImageFullScreen);
+        ivImage = (TouchImageView) findViewById(R.id.ivImageFullScreen);
     }
 
     // Load the full screen image using Picasso
     private void loadImage() {
         showProgressBar();
+        int deviceWidth = DeviceDimensionsHelper.getDisplayWidth(this) - 1;
+        int deviceHeight = DeviceDimensionsHelper.getDisplayHeight(this) - 285;
         // Load the image into the image view using Picasso
-        Picasso.with(this).load(url).fit().into(ivImage, new Callback() {
+        Picasso.with(this).load(url).resize(deviceWidth, deviceHeight).into(ivImage, new Callback() {
             @Override
             public void onSuccess() {
                 hideProgressBar();
@@ -98,7 +102,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         // Extract Bitmap from ImageView drawable
         Drawable drawable = imageView.getDrawable();
         Bitmap bmp = null;
-        if (drawable instanceof BitmapDrawable){
+        if (drawable instanceof BitmapDrawable) {
             bmp = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         } else {
             return null;
@@ -106,7 +110,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         // Store image to default external storage directory
         Uri bmpUri = null;
         try {
-            File file =  new File(Environment.getExternalStoragePublicDirectory(
+            File file = new File(Environment.getExternalStoragePublicDirectory(
                     Environment.DIRECTORY_DOWNLOADS), "share_image_" + System.currentTimeMillis() + ".png");
             file.getParentFile().mkdirs();
             FileOutputStream out = new FileOutputStream(file);
@@ -127,9 +131,8 @@ public class ImageDisplayActivity extends AppCompatActivity {
         progressBar = menu.findItem(R.id.action_progress_display);
         // Store instance of the menu item containing share
         shareMenuItem = menu.findItem(R.id.action_share);
-
+        // Load the image into the image view
         loadImage();
-
         // Fetch reference to the share action provider
         shareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(shareMenuItem);
         // Attach share event to the menu item provider
