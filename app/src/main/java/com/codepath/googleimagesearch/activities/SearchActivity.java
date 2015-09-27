@@ -166,6 +166,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+                showNetworkUnavailableDialog();
                 hideProgressBar();
             }
         });
@@ -178,6 +179,11 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         if (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting())
             return true;
+        showNetworkUnavailableDialog();
+        return false;
+    }
+
+    private void showNetworkUnavailableDialog() {
         AlertDialog alertDialog = new AlertDialog.Builder(SearchActivity.this).create();
         alertDialog.setTitle("No Internet Access!");
         alertDialog.setMessage("Please check your connection and try again.");
@@ -188,7 +194,6 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                     }
                 });
         alertDialog.show();
-        return false;
     }
 
     // Called when the search button is pressed
