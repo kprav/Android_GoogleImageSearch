@@ -1,0 +1,149 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    tools:context="com.codepath.googleimagesearch.fragments.SettingsFragment" >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvImageSize"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/image_size_label"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spnImageSize"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvColorFilter"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/color_filter_label"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spnColorFilter"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvImageType"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/image_type_label"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+
+        <Spinner
+            android:id="@+id/spnImageType"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:layout_margin="10dp" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tvSiteFilter"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/site_filter_label"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/etSiteFilter"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:hint="@string/enter_site_filter_label"
+            android:gravity="center_vertical"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal"
+        style="?android:attr/buttonBarStyle">
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="@string/save_button_label"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:background="#d3d3d3"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:hint="@string/cancel_button_label"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:layout_margin="10dp"
+            android:textSize="20sp"
+            android:background="#d3d3d3"
+            style="?android:attr/buttonBarButtonStyle"/>
+
+    </LinearLayout>
+
+</LinearLayout>
