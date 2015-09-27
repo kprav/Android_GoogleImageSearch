@@ -1,8 +1,13 @@
 package com.codepath.googleimagesearch.activities;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -75,7 +80,8 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                 Intent intent = new Intent(SearchActivity.this, ImageDisplayActivity.class);
                 ImageResult result = imageResults.get(position);
                 intent.putExtra("result", result);
-                startActivity(intent);
+                if (isNetworkAvailable())
+                    startActivity(intent);
             }
         });
         gvResults.setOnScrollListener(new EndlessScrollListener() {
@@ -121,6 +127,10 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
     }
 
     private void performImageSearch(boolean reset) {
+        // Perform search only if the network is available
+        if (!isNetworkAvailable()) {
+            return;
+        }
         String searchUrl = constructUrl();
         final boolean clear = reset;
         AsyncHttpClient client = new AsyncHttpClient();
@@ -154,12 +164,34 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         });
     }
 
+    // Check if network is available
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting())
+            return true;
+        AlertDialog alertDialog = new AlertDialog.Builder(SearchActivity.this).create();
+        alertDialog.setTitle("No Internet Access!");
+        alertDialog.setMessage("Please check your connection and try again.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+        return false;
+    }
+
     // Called when the search button is pressed
     // This is done by setting the android:onClick property in the XML
     public void onImageSearch(View view) {
         offset = 0;
         searchQuery = null;
-        searchQuery = etQuery.getText().toString();
+        searchQuery = etQuery.getText().toString().trim();
+        if (searchQuery.equalsIgnoreCase(""))
+            searchQuery = "Any";
         // Construct URL and fire the network request
         performImageSearch(true);
     }
