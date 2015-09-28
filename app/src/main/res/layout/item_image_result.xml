@@ -5,17 +5,17 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <ImageView
+    <com.etsy.android.grid.util.DynamicHeightImageView
         android:id="@+id/ivImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:contentDescription="@string/image_result_label"
         android:scaleType="fitXY"
         android:adjustViewBounds="true" />
 
-    <TextView
+    <com.etsy.android.grid.util.DynamicHeightTextView
         android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
         android:ellipsize="end"

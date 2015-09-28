@@ -12,6 +12,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ShareActionProvider;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -30,7 +31,7 @@ import java.io.IOException;
 
 public class ImageDisplayActivity extends AppCompatActivity {
 
-    private TouchImageView ivImage;
+    private TouchImageView ivImageFullScreen;
     private MenuItem progressBar;
     private MenuItem shareMenuItem;
     private Intent shareIntent;
@@ -50,8 +51,9 @@ public class ImageDisplayActivity extends AppCompatActivity {
         ImageResult result = getIntent().getParcelableExtra("result");
         // Extract the URL from the Parcelable
         url = result.getFullUrl();
+        Log.i("URL", url);
         // Find the image view
-        ivImage = (TouchImageView) findViewById(R.id.ivImageFullScreen);
+        ivImageFullScreen = (TouchImageView) findViewById(R.id.ivImageFullScreen);
     }
 
     // Load the full screen image using Picasso
@@ -60,7 +62,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
         int deviceWidth = DeviceDimensionsHelper.getDisplayWidth(this) - 1;
         int deviceHeight = DeviceDimensionsHelper.getDisplayHeight(this) - 285;
         // Load the image into the image view using Picasso
-        Picasso.with(this).load(url).resize(deviceWidth, deviceHeight).into(ivImage, new Callback() {
+        Picasso.with(this).load(url).resize(deviceWidth, deviceHeight).into(ivImageFullScreen, new Callback() {
             @Override
             public void onSuccess() {
                 hideProgressBar();
@@ -89,7 +91,7 @@ public class ImageDisplayActivity extends AppCompatActivity {
     // Gets the image URI and setup the associated share intent to hook into the provider
     private void setupShareIntent() {
         // Fetch Bitmap Uri locally
-        Uri bmpUri = getLocalBitmapUri(ivImage);
+        Uri bmpUri = getLocalBitmapUri(ivImageFullScreen);
         // Create share intent
         shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);

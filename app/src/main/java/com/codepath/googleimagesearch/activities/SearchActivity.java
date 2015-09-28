@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 
 import com.codepath.googleimagesearch.R;
@@ -23,6 +22,7 @@ import com.codepath.googleimagesearch.adapters.ImageResultsAdapter;
 import com.codepath.googleimagesearch.fragments.SettingsFragment;
 import com.codepath.googleimagesearch.helpers.EndlessScrollListener;
 import com.codepath.googleimagesearch.models.ImageResult;
+import com.etsy.android.grid.StaggeredGridView;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -37,7 +37,7 @@ import cz.msebera.android.httpclient.Header;
 public class SearchActivity extends AppCompatActivity implements SettingsFragment.OnFragmentInteractionListener {
 
     //private EditText etQuery;
-    private GridView gvResults;
+    private StaggeredGridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter adapterImageResults;
     private MenuItem progressBar;
@@ -71,7 +71,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
     // Setup all views and listeners in current activity
     private void setupViews() {
         // etQuery = (EditText) findViewById(R.id.etQuery);
-        gvResults = (GridView) findViewById(R.id.gvResults);
+        gvResults = (StaggeredGridView) findViewById(R.id.gvResults);
         // Define a listener for items in the grid (when clicked)
         gvResults.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -84,6 +84,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                     startActivity(intent);
             }
         });
+
         gvResults.setOnScrollListener(new EndlessScrollListener() {
             // Triggered only when new data needs to be appended to the list
             // Load more data for paginating and append the new data items to the adapter.
