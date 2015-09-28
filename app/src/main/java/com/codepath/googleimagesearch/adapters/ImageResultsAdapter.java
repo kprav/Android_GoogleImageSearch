@@ -73,8 +73,9 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
         viewHolder.ivImage.setImageResource(0);
         viewHolder.ivImage.setHeightRatio(positionHeight);
         Picasso.with(getContext()).load(imageInfo.getThumbUrl()).transform(new RoundedTransformation(5, 0)).into(viewHolder.ivImage);
+        // Picasso.with(getContext()).load(imageInfo.getThumbUrl()).into(viewHolder.ivImage);
         viewHolder.tvTitle.setText(Html.fromHtml(imageInfo.getTitle()));
-        viewHolder.tvTitle.setBackgroundResource(mBackgroundColors.get(backgroundIndex));
+        // viewHolder.tvTitle.setBackgroundResource(mBackgroundColors.get(backgroundIndex));
 
         // Return the completed view to be displayed
         return convertView;

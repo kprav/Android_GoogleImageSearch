@@ -13,12 +13,18 @@
         android:scaleType="fitXY"
         android:adjustViewBounds="true" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CFD8DC"/>
+
     <com.etsy.android.grid.util.DynamicHeightTextView
         android:id="@+id/tvTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLines="2"
         android:ellipsize="end"
+        android:textColor="#000000"
         android:text="@string/image_title_label" />
 
 </LinearLayout>
