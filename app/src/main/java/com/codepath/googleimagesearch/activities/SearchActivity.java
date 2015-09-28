@@ -239,6 +239,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         // Store instance of the menu item containing progress
         progressBar = menu.findItem(R.id.action_progress_search);
         // Perform an initial search to fill up the grid
+        offset = 0;
         performImageSearch(true);
         return true;
     }
