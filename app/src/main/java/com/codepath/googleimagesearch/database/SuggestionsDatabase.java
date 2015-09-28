@@ -25,11 +25,15 @@ public class SuggestionsDatabase {
         db = helper.getWritableDatabase();
     }
 
-    public long insertSuggestion(String text) {
+    public void insertSuggestion(String text) {
         ContentValues values = new ContentValues();
         values.put(FIELD_SUGGESTION, text);
         suggestionsSet.add(text);
-        return db.insert(TABLE_SUGGESTION, null, values);
+        try {
+            db.insert(TABLE_SUGGESTION, null, values);
+        } catch (Exception e) {
+
+        }
     }
 
     public Cursor getSuggestions(String text) {
@@ -45,7 +49,7 @@ public class SuggestionsDatabase {
         @Override
         public void onCreate(SQLiteDatabase db) {
             db.execSQL("CREATE TABLE " + TABLE_SUGGESTION + " (" +
-                    FIELD_ID + " integer primary key autoincrement, " + FIELD_SUGGESTION + " text);");
+                    FIELD_ID + " integer primary key autoincrement, " + FIELD_SUGGESTION + " text not null unique);");
             Log.d("SUGGESTION", "DB CREATED");
         }
         @Override

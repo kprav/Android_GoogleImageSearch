@@ -13,6 +13,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,7 +47,8 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
     private ImageResultsAdapter adapterImageResults;
     private MenuItem progressBar;
 
-    private int offset = 0;
+    private static Integer prevOffset = -1;
+    private static Integer offset = 0;
     private static String searchQuery = "Any";
     private static String imageSize = "Any";
     private static String colorFilter = "Any";
@@ -108,17 +110,20 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                     // ...
                     // Images 56 - 63 => Page 8
                     offset = totalItemsCount;
-                    performImageSearch(false);
+                    return (performImageSearch(false));
 
                     // True ONLY if more data is actually being loaded; false otherwise.
-                    return true;
+                    // return true;
                 }
+                offset = 0;
                 return false;
             }
         });
     }
 
     private String constructUrl() {
+        if (offset == prevOffset)
+            return null;
         String url = "https://ajax.googleapis.com/ajax/services/search/images?v=1.0&rsz=8&start=" + offset;
         if (!searchQuery.equalsIgnoreCase("Any"))
             url = url + "&q=" + searchQuery;
@@ -132,17 +137,21 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
             url = url + "&imgtype=" + imageType;
         if (!siteFilter.equalsIgnoreCase("Any"))
             url = url + "&as_sitesearch=" + siteFilter;
+        prevOffset = offset;
+        Log.i("URL", url);
         return url;
     }
 
-    private void performImageSearch(boolean reset) {
+    private boolean performImageSearch(boolean reset) {
         // Perform search only if the network is available
         showProgressBar();
         if (!isNetworkAvailable()) {
             hideProgressBar();
-            return;
+            return false;
         }
         String searchUrl = constructUrl();
+        if (searchUrl == null)
+            return  false;
         final boolean clear = reset;
         AsyncHttpClient client = new AsyncHttpClient();
         client.get(searchUrl, new JsonHttpResponseHandler() {
@@ -180,6 +189,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                 hideProgressBar();
             }
         });
+        return true;
     }
 
     // Check if network is available
@@ -244,8 +254,9 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                offset = 0;
                 if (query != null)
-                    query = query.trim();
+                    query = query.trim().toLowerCase();
                 if (query == null || query.trim().equals(""))
                     query = "Any";
                 searchQuery = query;
@@ -321,6 +332,7 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         SearchActivity.colorFilter = colorFilter;
         SearchActivity.imageType = imageType;
         SearchActivity.siteFilter = siteFilter;
+        offset = 0;
         performImageSearch(true);
     }
 
