@@ -3,6 +3,8 @@ package com.codepath.googleimagesearch.activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -19,6 +21,8 @@ import android.widget.ProgressBar;
 
 import com.codepath.googleimagesearch.R;
 import com.codepath.googleimagesearch.adapters.ImageResultsAdapter;
+import com.codepath.googleimagesearch.adapters.SuggestionSimpleCursorAdapter;
+import com.codepath.googleimagesearch.database.SuggestionsDatabase;
 import com.codepath.googleimagesearch.fragments.SettingsFragment;
 import com.codepath.googleimagesearch.helpers.EndlessScrollListener;
 import com.codepath.googleimagesearch.models.ImageResult;
@@ -49,6 +53,8 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
     private static String imageType = "Any";
     private static String siteFilter = "Any";
 
+    private SuggestionsDatabase database;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,9 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         adapterImageResults = new ImageResultsAdapter(this, imageResults);
         // Link the adapter to the gridview
         gvResults.setAdapter(adapterImageResults);
+
+        // SQLite database for search suggestions
+        database = new SuggestionsDatabase(this);
     }
 
     // Setup all views and listeners in current activity
@@ -240,12 +249,39 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
                 if (query == null || query.trim().equals(""))
                     query = "Any";
                 searchQuery = query;
+                if (!SuggestionsDatabase.suggestionsSet.contains(query))
+                    database.insertSuggestion(query);
                 performImageSearch(true);
+                return true;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                Cursor cursor = database.getSuggestions(newText);
+                if (cursor.getCount() != 0) {
+                    String[] columns = new String[]{SuggestionsDatabase.FIELD_SUGGESTION};
+                    int[] columnTextId = new int[]{android.R.id.text1};
+                    SuggestionSimpleCursorAdapter simple = new SuggestionSimpleCursorAdapter(getBaseContext(),
+                            R.layout.suggestion_list, cursor,
+                            columns, columnTextId
+                            , 0);
+                    searchView.setSuggestionsAdapter(simple);
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionClick(int position) {
+                SQLiteCursor cursor = (SQLiteCursor) searchView.getSuggestionsAdapter().getItem(position);
+                int indexColumnSuggestion = cursor.getColumnIndex(SuggestionsDatabase.FIELD_SUGGESTION);
+                searchView.setQuery(cursor.getString(indexColumnSuggestion), false);
                 return true;
             }
 
             @Override
-            public boolean onQueryTextChange(String newText) {
+            public boolean onSuggestionSelect(int position) {
                 return false;
             }
         });
@@ -287,4 +323,5 @@ public class SearchActivity extends AppCompatActivity implements SettingsFragmen
         SearchActivity.siteFilter = siteFilter;
         performImageSearch(true);
     }
+
 }
