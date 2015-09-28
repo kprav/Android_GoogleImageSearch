@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
 import com.codepath.googleimagesearch.R;
+import com.codepath.googleimagesearch.helpers.RoundedTransformation;
 import com.codepath.googleimagesearch.models.ImageResult;
 import com.etsy.android.grid.util.DynamicHeightImageView;
 import com.etsy.android.grid.util.DynamicHeightTextView;
@@ -71,7 +72,7 @@ public class ImageResultsAdapter extends ArrayAdapter<ImageResult> {
         // Set the data to the viewHolder
         viewHolder.ivImage.setImageResource(0);
         viewHolder.ivImage.setHeightRatio(positionHeight);
-        Picasso.with(getContext()).load(imageInfo.getThumbUrl()).into(viewHolder.ivImage);
+        Picasso.with(getContext()).load(imageInfo.getThumbUrl()).transform(new RoundedTransformation(5, 0)).into(viewHolder.ivImage);
         viewHolder.tvTitle.setText(Html.fromHtml(imageInfo.getTitle()));
         viewHolder.tvTitle.setBackgroundResource(mBackgroundColors.get(backgroundIndex));
 

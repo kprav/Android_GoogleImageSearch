@@ -36,7 +36,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SearchActivity extends AppCompatActivity implements SettingsFragment.OnFragmentInteractionListener {
 
-    //private EditText etQuery;
+    // private EditText etQuery;
     private StaggeredGridView gvResults;
     private ArrayList<ImageResult> imageResults;
     private ImageResultsAdapter adapterImageResults;
